@@ -1,0 +1,2 @@
+module magical_arena {
+}
