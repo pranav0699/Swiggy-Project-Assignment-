@@ -3,21 +3,9 @@ package com.arena;
 import java.util.Random;
 
 public class Arena {
-
 	private Player player1;
 	private Player player2;
 	private Random dice;
-
-	public Arena(Player player1, Player player2, Random dice) {
-		super();
-		this.player1 = player1;
-		this.player2 = player2;
-		this.dice = dice;
-	}
-
-	public Arena() {
-		super();
-	}
 
 	public Arena(Player player1, Player player2) {
 		this.player1 = player1;
@@ -54,11 +42,18 @@ public class Arena {
 	}
 
 	public void startMatch() {
+		System.out.println("Starting the match!");
+		System.out.println(player1);
+		System.out.println(player2);
+		System.out.println();
+
 		Player attacker = player1.getHealth() < player2.getHealth() ? player1 : player2;
 		Player defender = attacker == player1 ? player2 : player1;
 
 		while (attacker.isAlive() && defender.isAlive()) {
-			System.out.println("Attacker: " + attacker.getHealth() + " Defender: " + defender.getHealth());
+			System.out.println("Current Status:");
+			System.out.println("Attacker: " + attacker);
+			System.out.println("Defender: " + defender);
 			takeTurn(attacker, defender);
 
 			// Swap roles
@@ -67,7 +62,7 @@ public class Arena {
 			defender = temp;
 		}
 
-		System.out.println("Game Over! Winner: " + (attacker.isAlive() ? "Attacker" : "Defender"));
+		System.out.println("Game Over! Winner: " + (attacker.isAlive() ? attacker : defender));
 	}
 
 	private void takeTurn(Player attacker, Player defender) {
@@ -76,14 +71,18 @@ public class Arena {
 
 		int damage = attacker.getAttack() * attackRoll;
 		int defense = defender.getStrength() * defenseRoll;
-
 		int netDamage = damage - defense;
+
 		if (netDamage > 0) {
 			defender.setHealth(defender.getHealth() - netDamage);
 		}
 
-		System.out.println("Attack Roll: " + attackRoll + " Defense Roll: " + defenseRoll);
-		System.out.println("Damage: " + damage + " Defense: " + defense + " Net Damage: " + netDamage);
+		System.out.println("\nTurn Summary:");
+		System.out.println(attacker.getName() + " rolls the dice: " + attackRoll);
+		System.out.println(defender.getName() + " rolls the dice: " + defenseRoll);
+		System.out.println("Damage by " + attacker.getName() + ": " + damage);
+		System.out.println("Defense by " + defender.getName() + ": " + defense);
+		System.out.println("Net damage to " + defender.getName() + ": " + (netDamage > 0 ? netDamage : 0));
+		System.out.println();
 	}
-
 }
