@@ -1,47 +1,19 @@
-package com.arena;
+package com.arena.service;
 
-import java.util.Random;
+import com.arena.model.Player;
+import com.arena.interfaces.DiceRoller;
+import com.arena.interfaces.GameArena;
 
-public class Arena {
-	private Player player1;
-	private Player player2;
-	private Random dice;
+public class SimpleArena implements GameArena {
 
-	public Arena(Player player1, Player player2) {
-		this.player1 = player1;
-		this.player2 = player2;
-		this.dice = new Random();
+	private DiceRoller diceRoller;
+
+	public SimpleArena(DiceRoller diceRoller) {
+		this.diceRoller = diceRoller;
 	}
 
-	public Player getPlayer1() {
-		return player1;
-	}
-
-	public void setPlayer1(Player player1) {
-		this.player1 = player1;
-	}
-
-	public Player getPlayer2() {
-		return player2;
-	}
-
-	public void setPlayer2(Player player2) {
-		this.player2 = player2;
-	}
-
-	public Random getDice() {
-		return dice;
-	}
-
-	public void setDice(Random dice) {
-		this.dice = dice;
-	}
-
-	private int rollDice() {
-		return dice.nextInt(6) + 1;
-	}
-
-	public void startMatch() {
+	@Override
+	public void startMatch(Player player1, Player player2) {
 		System.out.println("Starting the match!");
 		System.out.println(player1);
 		System.out.println(player2);
@@ -62,12 +34,12 @@ public class Arena {
 			defender = temp;
 		}
 
-		System.out.println("Game Over! Winner: " + (attacker.isAlive() ? attacker : defender));
+		System.out.println("Game Over! Winner: " + (attacker.isAlive() ? attacker.getName() : defender.getName()));
 	}
 
 	private void takeTurn(Player attacker, Player defender) {
-		int attackRoll = rollDice();
-		int defenseRoll = rollDice();
+		int attackRoll = diceRoller.rollDice();
+		int defenseRoll = diceRoller.rollDice();
 
 		int damage = attacker.getAttack() * attackRoll;
 		int defense = defender.getStrength() * defenseRoll;
@@ -85,4 +57,5 @@ public class Arena {
 		System.out.println("Net damage to " + defender.getName() + ": " + (netDamage > 0 ? netDamage : 0));
 		System.out.println();
 	}
+
 }
